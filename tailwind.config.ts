@@ -25,6 +25,9 @@ export default {
         },
         dark: '#222222',
       },
+      boxShadow: {
+        bid: '0px 13px 9px rgba(0, 0, 0, 0.25)',
+      },
       keyframes: {
         flicker: {
           '0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100%': {
