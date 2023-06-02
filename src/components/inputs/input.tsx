@@ -33,8 +33,9 @@ const Input = React.forwardRef<
         <input
           ref={ref}
           value={value === 0 ? '' : value}
+          type='number'
           className={clsxm(
-            'h-10 w-full rounded-xl border border-none border-white bg-transparent px-2 py-2 text-3xl  placeholder:text-white placeholder:text-opacity-10 focus:outline-none',
+            'h-10 w-full rounded-xl border border-none border-white bg-transparent px-2 py-2 text-3xl placeholder:text-white  placeholder:text-opacity-10 focus:outline-none focus:ring-0',
             className
           )}
           placeholder={placeholder || '0'}

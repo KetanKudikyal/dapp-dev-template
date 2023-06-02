@@ -10,8 +10,10 @@ import { Token, tokens } from '@/config/tokens';
 export default function TokenSelect({
   selected,
   setSelected,
+  removeToken,
 }: {
   selected: Token;
+  removeToken?: Token;
   setSelected: (token: Token) => void;
 }) {
   const chainId = useChainId();
@@ -46,22 +48,24 @@ export default function TokenSelect({
           >
             <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto py-1 text-base  focus:outline-none sm:text-sm'>
               <Card>
-                {tokens[chainId].map((token, tokenIdx) => (
-                  <Listbox.Option key={tokenIdx} value={token}>
-                    {({ active }) => (
-                      <TokenRow
-                        imageurl={token.image}
-                        size='sm'
-                        className={`py-3 ${
-                          active
-                            ? 'rounded-none bg-white bg-opacity-10 '
-                            : 'text-white'
-                        }`}
-                        tokenName={token.symbol}
-                      />
-                    )}
-                  </Listbox.Option>
-                ))}
+                {tokens[chainId]
+                  .filter((token) => token.address !== removeToken?.address)
+                  .map((token, tokenIdx) => (
+                    <Listbox.Option key={tokenIdx} value={token}>
+                      {({ active }) => (
+                        <TokenRow
+                          imageurl={token.image}
+                          size='sm'
+                          className={`py-3 ${
+                            active
+                              ? 'rounded-none bg-white bg-opacity-10 '
+                              : 'text-white'
+                          }`}
+                          tokenName={token.symbol}
+                        />
+                      )}
+                    </Listbox.Option>
+                  ))}
               </Card>
             </Listbox.Options>
           </Transition>

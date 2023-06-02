@@ -23,7 +23,7 @@ const AddLiquidity = () => {
   const chainId = useChainId();
   const [swapDetails, setSwapDetails] = useState({
     tokenA: tokens[chainId][0],
-    tokenB: tokens[chainId][0],
+    tokenB: tokens[chainId][1],
     minPrice: 0,
     maxPrice: 0,
     amount: 0,
@@ -62,14 +62,15 @@ const AddLiquidity = () => {
         <p className='font-normal text-white text-opacity-40'>Select a pair</p>
         <Row isBetween className='mt-2  w-full space-x-2'>
           <TokenRow
-            tokenName='ETH'
+            tokenName={swapDetails.tokenA.symbol}
             className='w-[50%] bg-transparent pl-0 shadow-none'
             disabled={true}
-            imageurl={require('../../../public/images/eth.png')}
+            imageurl={swapDetails.tokenA.image}
           />
           <div className=' h-full w-[50%]'>
             <TokenSelect
               selected={swapDetails.tokenB}
+              removeToken={swapDetails.tokenA}
               setSelected={(token) => {
                 setSwapDetails({
                   ...swapDetails,
@@ -107,7 +108,7 @@ const AddLiquidity = () => {
         <Button
           disabled={swapDetails.amount === 0}
           onClick={() => {
-            alert(JSON.stringify(swapDetails));
+            // alert(JSON.stringify(swapDetails));
           }}
           className='mt-6  h-16  w-full rounded-2xl text-center'
         >
@@ -143,40 +144,28 @@ export const PriceRange = ({
   }, [value]);
   return (
     <Card className=' h-24  w-[50%]  overflow-hidden'>
-      <Row isBetween className='h-full'>
-        <Row isCentered className=' h-full w-[30%] '>
-          <Row
-            isCentered
-            onClick={() => {
-              if (value === 0) {
-                return;
-              }
-              setValue(value - 1);
-            }}
-            className=' h-[35px] w-[35px] cursor-pointer rounded-lg border-2 border-white border-opacity-10 bg-white  bg-opacity-5 text-2xl font-normal'
-          >
-            -
-          </Row>
-        </Row>
-        <Row direction='col' isBetween className=' h-full w-[40%]'>
-          <p className='mt-1 text-[12px] text-white text-opacity-40'>
+      <Row className='h-full w-full'>
+        <Row
+          direction='col'
+          isBetween
+          className='h-full w-[100%] items-start pl-4'
+        >
+          <p className='mt-1 text-start text-[12px] text-white text-opacity-40'>
             {type === 'max' ? 'Max price' : 'Min Price'}
           </p>
-          <p className='text-[18px]'>{value}</p>
+          <input
+            value={value === 0 ? '' : value}
+            placeholder='10'
+            type='number'
+            title={'Enter' + type + 'price'}
+            className='w-[90%] border-none bg-transparent px-0 text-[18px] placeholder:text-white placeholder:text-opacity-20 focus:outline-none focus:ring-0'
+            onChange={(e) => {
+              setValue(Number(e.target.value));
+            }}
+          />
           <p className='mb-1 break-keep text-[10px] text-white text-opacity-40'>
             ETH per {token.symbol}
           </p>
-        </Row>
-        <Row isCentered className=' h-full w-[30%] '>
-          <Row
-            isCentered
-            onClick={() => {
-              setValue(value + 1);
-            }}
-            className=' h-[35px] w-[35px] cursor-pointer rounded-lg border-2 border-white border-opacity-10 bg-white  bg-opacity-5 text-2xl font-normal'
-          >
-            +
-          </Row>
         </Row>
       </Row>
     </Card>
