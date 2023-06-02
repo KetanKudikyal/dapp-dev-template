@@ -14,7 +14,6 @@ export default function Header() {
             />
           </div>
         </UnstyledLink> */}
-        {/* <ConnectWalletBtn /> */}
         <ConnectButton />
       </div>
     </header>

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { useChainId } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
 
@@ -20,6 +20,7 @@ type tokenRowProps = {
 } & React.ComponentPropsWithRef<'div'>;
 
 const AddLiquidity = () => {
+  const { address } = useAccount();
   const chainId = useChainId();
   const [swapDetails, setSwapDetails] = useState({
     tokenA: tokens[chainId][0],
@@ -97,10 +98,11 @@ const AddLiquidity = () => {
           />
         </Row>
         <p className='font-normal text-white text-opacity-40'>Deposit Amount</p>
-        <Card>
+        <Card className='mt-2'>
           <Input
             value={swapDetails.amount}
             token={swapDetails.tokenB}
+            placeholder='eg: $1000'
             onChange={(e) => {
               setAmount(Number(e.target.value));
             }}
@@ -114,7 +116,7 @@ const AddLiquidity = () => {
           }}
           className='mt-6  h-16  w-full rounded-2xl text-center'
         >
-          Proceed
+          {address ? 'Proceed' : 'Connect wallet'}
         </Button>
       </div>
     </Row>
@@ -159,7 +161,7 @@ export const PriceRange = ({
           </p>
           <input
             value={value === 0 ? '' : value}
-            placeholder='10'
+            placeholder='eg: 10'
             type='number'
             title={'Enter' + type + 'price'}
             className='w-[90%] border-none bg-transparent px-0 text-[18px] placeholder:text-white placeholder:text-opacity-20 focus:outline-none focus:ring-0'

@@ -22,7 +22,7 @@ const useGetTokenBalances = ({
   const alchemy = new Alchemy(settings);
   return useQuery(['useGetTokenBalances'], async () => {
     if (!address) {
-      throw new Error('Please pass wallet address');
+      return 0;
     }
     const tokenBalanceData = await alchemy.core.getTokenBalances(address, [
       tokenContractAddress,
