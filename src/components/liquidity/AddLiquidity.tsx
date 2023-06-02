@@ -85,13 +85,15 @@ const AddLiquidity = () => {
             type='min'
             setPrice={setMinPrice}
             defaultPrice={0}
-            token={swapDetails.tokenB}
+            tokenA={swapDetails.tokenA}
+            tokenB={swapDetails.tokenB}
           />
           <PriceRange
             type='max'
             setPrice={setMaxPrice}
             defaultPrice={0}
-            token={swapDetails.tokenB}
+            tokenA={swapDetails.tokenA}
+            tokenB={swapDetails.tokenB}
           />
         </Row>
         <p className='font-normal text-white text-opacity-40'>Deposit Amount</p>
@@ -125,11 +127,13 @@ export const PriceRange = ({
   type,
   defaultPrice,
   setPrice,
-  token,
+  tokenA,
+  tokenB,
 }: {
   type: 'min' | 'max';
   defaultPrice: number;
-  token: Token;
+  tokenA: Token;
+  tokenB: Token;
   setPrice: (price: number) => void;
 }) => {
   const [value, setValue] = useState(defaultPrice);
@@ -164,7 +168,7 @@ export const PriceRange = ({
             }}
           />
           <p className='mb-1 break-keep text-[10px] text-white text-opacity-40'>
-            ETH per {token.symbol}
+            {tokenA.symbol} per {tokenB.symbol}
           </p>
         </Row>
       </Row>
