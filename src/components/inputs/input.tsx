@@ -25,6 +25,7 @@ const Input = React.forwardRef<
       chain?.id === polygonMumbai.id
         ? Network.MATIC_MUMBAI
         : Network.ETH_GOERLI,
+    decimals: token.decimals,
     tokenContractAddress: token.address,
   });
   return (
@@ -41,9 +42,7 @@ const Input = React.forwardRef<
           placeholder={placeholder || '0'}
           {...inputprops}
         />
-        <p className='ml-2 mt-2 text-sm text-white text-opacity-40'>
-          $41,004.60
-        </p>
+        <p className='ml-2 mt-2 text-sm text-white text-opacity-40'>-</p>
       </div>
       <div className='w-fit'>
         <TokenRow

@@ -4,11 +4,13 @@ import { Address } from 'viem';
 
 const useGetTokenBalances = ({
   address,
+  decimals,
   tokenContractAddress,
   network = Network.ETH_MAINNET,
 }: {
   address: Address | undefined;
-  tokenContractAddress: string;
+  tokenContractAddress: Address;
+  decimals: number;
   network: Network;
 }) => {
   if (!process.env.NEXT_PUBLIC_ALCHEMY_API_KEY) {
@@ -29,7 +31,7 @@ const useGetTokenBalances = ({
     ]);
     const hexValue = tokenBalanceData.tokenBalances[0].tokenBalance;
     const decimalValue = BigInt(hexValue as string);
-    const ethValue = decimalValue / BigInt(10 ** 18);
+    const ethValue = decimalValue / BigInt(10 ** decimals);
     return ethValue;
   });
 };
