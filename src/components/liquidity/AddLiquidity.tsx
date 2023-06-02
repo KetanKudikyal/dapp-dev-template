@@ -112,7 +112,7 @@ const AddLiquidity = () => {
           }}
           className='mt-6  h-16  w-full rounded-2xl text-center'
         >
-          Connect wallet
+          Proceed
         </Button>
       </div>
     </Row>
