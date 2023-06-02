@@ -6,6 +6,7 @@ const Row: React.FC<
   ComponentPropsWithRef<'div'> & {
     isCentered?: boolean;
     isBetween?: boolean;
+    isResponsive?: boolean;
     direction?: 'row' | 'col';
   }
 > = ({
@@ -14,6 +15,7 @@ const Row: React.FC<
   children,
   isBetween,
   isCentered,
+  isResponsive,
   direction = 'row',
   ...rest
 }) => {
@@ -26,6 +28,7 @@ const Row: React.FC<
           isCentered && 'justify-center',
           direction === 'col' ? 'flex-col' : 'flex-row',
           isBetween && 'justify-between',
+          isResponsive && 'flex-col md:flex-row',
         ],
         className
       )}

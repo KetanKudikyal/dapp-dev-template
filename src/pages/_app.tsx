@@ -10,6 +10,7 @@ import {
   trustWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import type { AppProps } from 'next/app';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { configureChains, createClient, goerli, WagmiConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
@@ -25,12 +26,12 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const { wallets } = getDefaultWallets({
-  appName: 'eth-usd-swap',
+  appName: 'Secure stables',
   chains,
 });
 
 const demoAppInfo = {
-  appName: 'eth-usd-swap',
+  appName: 'Secure stables',
 };
 
 const connectors = connectorsForWallets([
@@ -52,26 +53,30 @@ const wagmiClient = createClient({
   webSocketProvider,
 });
 
+const queryClient = new QueryClient();
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider
-        theme={darkTheme({
-          accentColor: '#3554A0',
-          accentColorForeground: 'white',
-          borderRadius: 'large',
-          fontStack: 'system',
-          overlayBlur: 'small',
-        })}
-        modalSize='compact'
-        showRecentTransactions
-        appInfo={demoAppInfo}
-        chains={chains}
-      >
-        <Seo />
-        <Component {...pageProps} />
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <QueryClientProvider client={queryClient}>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider
+          theme={darkTheme({
+            accentColor: '#3554A0',
+            accentColorForeground: 'white',
+            borderRadius: 'large',
+            fontStack: 'system',
+            overlayBlur: 'small',
+          })}
+          modalSize='compact'
+          showRecentTransactions
+          appInfo={demoAppInfo}
+          chains={chains}
+        >
+          <Seo />
+          <Component {...pageProps} />
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </QueryClientProvider>
   );
 }
 

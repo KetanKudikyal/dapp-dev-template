@@ -48,19 +48,22 @@ const AddLiquidity = () => {
     });
   };
   return (
-    <Row isBetween className='h-[570px]'>
-      <div className='shadow-bid mx-auto h-full items-stretch  rounded-2xl border-2 border-white border-opacity-10 bg-white bg-opacity-5 px-6 py-6 backdrop-blur-xl md:w-[48%]'></div>
-      <div className='shadow-bid mx-auto h-full  rounded-2xl border-2 border-white border-opacity-10 bg-white bg-opacity-5 px-6 py-6 backdrop-blur-xl md:w-[48%]'>
+    <Row
+      isBetween
+      isResponsive
+      className='space-y-4 pb-20 md:h-[500px] md:space-y-0 md:pb-0'
+    >
+      <div className='shadow-bid mx-auto h-full items-stretch  rounded-2xl border-2 border-white border-opacity-10 bg-white bg-opacity-5 px-6 py-6 backdrop-blur-xl md:w-[48%]'>
         <h3 className='w-full text-center'>
-          Secure your stables with UniV2 stability
+          Secure your stables with UniV2 security
         </h3>
-        <p className='mt-6 font-normal text-white text-opacity-40'>
-          Select a pair
-        </p>
+      </div>
+      <div className='shadow-bid mx-auto h-full  rounded-2xl border-2 border-white border-opacity-10 bg-white bg-opacity-5 px-6 py-6 backdrop-blur-xl md:w-[48%]'>
+        <p className='font-normal text-white text-opacity-40'>Select a pair</p>
         <Row isBetween className='mt-2  w-full space-x-2'>
           <TokenRow
             tokenName='ETH'
-            className='w-[50%]'
+            className='w-[50%] bg-transparent pl-0 shadow-none'
             disabled={true}
             imageurl={require('../../../public/images/eth.png')}
           />
@@ -76,7 +79,7 @@ const AddLiquidity = () => {
             />
           </div>
         </Row>
-        <Row isBetween className='my-4  w-full space-x-2 '>
+        <Row isBetween isResponsive className='my-4  w-full space-x-2 '>
           <PriceRange
             type='min'
             setPrice={setMinPrice}

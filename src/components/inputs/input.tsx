@@ -1,6 +1,10 @@
+import { Network } from 'alchemy-sdk';
 import React from 'react';
+import { useAccount, useNetwork } from 'wagmi';
+import { polygonMumbai } from 'wagmi/chains';
 
 import clsxm from '@/lib/clsxm';
+import useGetTokenBalances from '@/hooks/useGetTokenBalances';
 
 import { TokenRow } from '@/components/liquidity/AddLiquidity';
 import Row from '@/components/rows/Row';
@@ -13,6 +17,16 @@ const Input = React.forwardRef<
     token: Token;
   }
 >(({ token, value, className, placeholder, ...inputprops }, ref) => {
+  const { address } = useAccount();
+  const { chain } = useNetwork();
+  const { data } = useGetTokenBalances({
+    address: address,
+    network:
+      chain?.id === polygonMumbai.id
+        ? Network.MATIC_MUMBAI
+        : Network.ETH_GOERLI,
+    tokenContractAddress: token.address,
+  });
   return (
     <Row isBetween className=' mb-4 mt-2  w-full rounded-2xl  px-3 py-3'>
       <div className='w-fit'>
@@ -37,7 +51,9 @@ const Input = React.forwardRef<
           className='border border-white border-opacity-10 bg-white bg-opacity-5  '
           imageurl={token.image}
         />
-        <p className='mt-2 text-sm text-white text-opacity-40'>Balance - 0</p>
+        <p className='mt-2 text-sm text-white text-opacity-40'>
+          Balance - {data?.toString()}
+        </p>
       </div>
     </Row>
   );

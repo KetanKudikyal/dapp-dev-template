@@ -11,27 +11,19 @@ export const tokens: Record<number, Token[]> = {
   [polygonMumbai.id]: [
     {
       id: 'tether',
-      symbol: 'USDT',
-      name: 'Tether',
-      address: '0xafcc98d5107e8b22800c99bBe83e98a58a738Bf7',
+      symbol: 'USA',
+      name: 'USA Coin',
+      address: '0x04517a727E4d503a9aCE8Ec8B17c08990e2561b9',
       image:
         'https://assets.coingecko.com/coins/images/325/large/Tether.png?1668148663',
     },
     {
       id: 'usd-coin',
-      symbol: 'USDC',
-      name: 'USD Coin',
-      address: '0xA020e38DA71E2B2e60A1389aF435E42570F4EA1F',
+      symbol: 'USF',
+      name: 'USF Coin',
+      address: '0x97B83cD86D699A1fC92d5c7edfbdA2f1f9768f1f',
       image:
         'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
-    },
-    {
-      id: 'matic-network',
-      symbol: 'MATIC',
-      name: 'Matic',
-      address: '0x29d618e94d296335Ba3902c181dbE59C7010d4A9',
-      image:
-        'https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png?1624446912',
     },
   ],
   [goerli.id]: [
@@ -50,14 +42,6 @@ export const tokens: Record<number, Token[]> = {
       address: '0x5E5a4309D4F3f170766Ee4635dAbB743A594D399',
       image:
         'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
-    },
-    {
-      id: 'matic-network',
-      symbol: 'MATIC',
-      name: 'Matic',
-      address: '0x9b33A3E641b66cBb5d9407AD3b332E44Be708512',
-      image:
-        'https://assets.coingecko.com/coins/images/4713/large/matic-token-icon.png?1624446912',
     },
   ],
 };
