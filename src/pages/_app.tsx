@@ -10,7 +10,8 @@ import {
   trustWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import type { AppProps } from 'next/app';
-import { configureChains, createClient, sepolia, WagmiConfig } from 'wagmi';
+import { configureChains, createClient, goerli, WagmiConfig } from 'wagmi';
+import { polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
 import '@rainbow-me/rainbowkit/styles.css';
@@ -19,7 +20,7 @@ import '../styles/globals.css';
 import Seo from '@/components/Seo';
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [sepolia],
+  [polygonMumbai, goerli],
   [publicProvider()]
 );
 
@@ -63,6 +64,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           overlayBlur: 'small',
         })}
         modalSize='compact'
+        showRecentTransactions
         appInfo={demoAppInfo}
         chains={chains}
       >

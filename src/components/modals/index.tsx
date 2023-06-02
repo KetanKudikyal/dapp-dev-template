@@ -1,24 +1,26 @@
 import { Listbox, Transition } from '@headlessui/react';
-import Image from 'next/image';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
+import { useChainId } from 'wagmi';
 
 import Card from '@/components/cards';
 import { TokenRow } from '@/components/liquidity/AddLiquidity';
 
-const tokens = [
-  { name: 'USDC', image: require('../../../public/images/usdc.png') },
-  { name: 'USDT', image: require('../../../public/images/usdt.png') },
-];
+import { Token, tokens } from '@/config/tokens';
 
-export default function TokenSelect() {
-  const [selected, setSelected] = useState(tokens[0]);
-
+export default function TokenSelect({
+  selected,
+  setSelected,
+}: {
+  selected: Token;
+  setSelected: (token: Token) => void;
+}) {
+  const chainId = useChainId();
   return (
     <div className='h-full w-full'>
       <Listbox value={selected} onChange={setSelected}>
         <div className='relative h-full'>
           <Listbox.Button className='  relative h-full w-full  cursor-default focus:outline-none  sm:text-sm'>
-            <TokenRow tokenName={selected.name} imageurl={selected.image} />
+            <TokenRow tokenName={selected.symbol} imageurl={selected.image} />
             <div className='absolute right-2 right-2 top-4'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -44,27 +46,19 @@ export default function TokenSelect() {
           >
             <Listbox.Options className='absolute mt-1 max-h-60 w-full overflow-auto py-1 text-base  focus:outline-none sm:text-sm'>
               <Card>
-                {tokens.map((token, tokenIdx) => (
-                  <Listbox.Option
-                    key={tokenIdx}
-                    className={({ active }) =>
-                      `relative cursor-default select-none px-4  py-2 ${
-                        active ? 'bg-white bg-opacity-10' : 'text-white'
-                      }`
-                    }
-                    value={token}
-                  >
-                    {() => (
-                      <>
-                        <div className='flex items-center rounded-2xl text-xl'>
-                          <Image
-                            src={token.image}
-                            className='mr-2 h-6 w-6'
-                            alt='ETH'
-                          />
-                          {token.name}
-                        </div>
-                      </>
+                {tokens[chainId].map((token, tokenIdx) => (
+                  <Listbox.Option key={tokenIdx} value={token}>
+                    {({ active }) => (
+                      <TokenRow
+                        imageurl={token.image}
+                        size='sm'
+                        className={`py-3 ${
+                          active
+                            ? 'rounded-none bg-white bg-opacity-10 '
+                            : 'text-white'
+                        }`}
+                        tokenName={token.symbol}
+                      />
                     )}
                   </Listbox.Option>
                 ))}

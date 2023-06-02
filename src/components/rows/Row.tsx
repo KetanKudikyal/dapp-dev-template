@@ -15,12 +15,13 @@ const Row: React.FC<
   isBetween,
   isCentered,
   direction = 'row',
+  ...rest
 }) => {
   return (
     <div
       ref={ref}
       className={clsxm(
-        'flex h-full w-full items-center items-center',
+        'flex h-fit w-full items-center items-center',
         [
           isCentered && 'justify-center',
           direction === 'col' ? 'flex-col' : 'flex-row',
@@ -28,6 +29,7 @@ const Row: React.FC<
         ],
         className
       )}
+      {...rest}
     >
       {children}
     </div>
