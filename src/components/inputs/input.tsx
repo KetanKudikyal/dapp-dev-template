@@ -1,7 +1,5 @@
-import { Network } from 'alchemy-sdk';
 import React from 'react';
-import { useAccount, useNetwork } from 'wagmi';
-import { polygonMumbai } from 'wagmi/chains';
+import { useAccount } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
 import useGetTokenBalances from '@/hooks/useGetTokenBalances';
@@ -18,13 +16,8 @@ const Input = React.forwardRef<
   }
 >(({ token, value, className, placeholder, ...inputprops }, ref) => {
   const { address } = useAccount();
-  const { chain } = useNetwork();
   const { data } = useGetTokenBalances({
     address: address,
-    network:
-      chain?.id === polygonMumbai.id
-        ? Network.MATIC_MUMBAI
-        : Network.ETH_GOERLI,
     decimals: token.decimals,
     tokenContractAddress: token.address,
   });
