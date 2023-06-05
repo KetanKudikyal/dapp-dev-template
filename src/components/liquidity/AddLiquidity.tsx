@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { useAccount, useChainId } from 'wagmi';
+import { useChainId } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
+import useTokenContractInstance from '@/hooks/useTokenContractInstance';
 
 import Button from '@/components/buttons/Button';
 import Card from '@/components/cards';
@@ -20,103 +21,71 @@ type tokenRowProps = {
 } & React.ComponentPropsWithRef<'div'>;
 
 const AddLiquidity = () => {
-  const { address } = useAccount();
   const chainId = useChainId();
   const [swapDetails, setSwapDetails] = useState({
-    tokenA: tokens[chainId][0],
-    tokenB: tokens[chainId][1],
-    minPrice: 0,
-    maxPrice: 0,
+    token: tokens[chainId][0],
     amount: 0,
   });
+  const tokenContractInstance = useTokenContractInstance({
+    tokenAddress: swapDetails.token.address,
+  });
 
-  const setAmount = (amount: number) => {
-    setSwapDetails({
-      ...swapDetails,
-      amount: amount,
-    });
-  };
-  const setMinPrice = (minPrice: number) => {
-    setSwapDetails({
-      ...swapDetails,
-      minPrice: minPrice,
-    });
-  };
-  const setMaxPrice = (maxPrice: number) => {
-    setSwapDetails({
-      ...swapDetails,
-      maxPrice: maxPrice,
-    });
-  };
   return (
     <Row
       isBetween
       isResponsive
-      className='space-y-4 pb-20 md:h-[500px] md:space-y-0 md:pb-0'
+      className='space-y-4 pb-20 md:space-y-0 md:pb-0'
     >
-      <div className='shadow-bid mx-auto h-full items-stretch  rounded-2xl border-2 border-white border-opacity-10 bg-white bg-opacity-5 px-6 py-6 backdrop-blur-xl md:w-[48%]'>
-        <h3 className='w-full text-center'>
-          Secure your stables with UniV2 security
-        </h3>
-      </div>
       <div className='shadow-bid mx-auto h-full  rounded-2xl border-2 border-white border-opacity-10 bg-white bg-opacity-5 px-6 py-6 backdrop-blur-xl md:w-[48%]'>
-        <p className='font-normal text-white text-opacity-40'>Select a pair</p>
+        <p className='font-normal text-white text-opacity-40'>Select a token</p>
         <Row isBetween className='mt-2  w-full space-x-2'>
-          <TokenRow
+          {/* <TokenRow
             tokenName={swapDetails.tokenA.symbol}
             className='w-[50%] bg-transparent pl-0 shadow-none'
             disabled={true}
             imageurl={swapDetails.tokenA.image}
-          />
-          <div className=' h-full w-[50%]'>
+          /> */}
+          <div className=' h-full w-[100%]'>
             <TokenSelect
-              selected={swapDetails.tokenB}
-              removeToken={swapDetails.tokenA}
-              setSelected={(token) => {
+              selected={swapDetails.token}
+              setSelected={(_token) => {
                 setSwapDetails({
                   ...swapDetails,
-                  tokenB: token,
+                  token: _token,
                 });
               }}
             />
           </div>
         </Row>
-        <Row isBetween isResponsive className='my-4  w-full space-x-2 '>
-          <PriceRange
-            type='min'
-            setPrice={setMinPrice}
-            defaultPrice={0}
-            tokenA={swapDetails.tokenA}
-            tokenB={swapDetails.tokenB}
-          />
-          <PriceRange
-            type='max'
-            setPrice={setMaxPrice}
-            defaultPrice={0}
-            tokenA={swapDetails.tokenA}
-            tokenB={swapDetails.tokenB}
-          />
-        </Row>
-        <p className='font-normal text-white text-opacity-40'>Deposit Amount</p>
+
+        <p className='mt-4 font-normal text-white text-opacity-40'>
+          Approve amount
+        </p>
         <Card className='mt-2'>
           <Input
             value={swapDetails.amount}
-            token={swapDetails.tokenB}
+            token={swapDetails.token}
             placeholder='eg: $1000'
             onChange={(e) => {
-              setAmount(Number(e.target.value));
+              setSwapDetails({
+                ...swapDetails,
+                amount: Number(e.target.value),
+              });
             }}
           />
         </Card>
 
         <Button
           disabled={swapDetails.amount === 0}
-          onClick={() => {
-            // alert(JSON.stringify(swapDetails));
+          onClick={async () => {
+            await tokenContractInstance?.approve(
+              swapDetails.token.address,
+              swapDetails.amount
+            );
           }}
           className='mt-6  h-16  w-full rounded-2xl text-center'
         >
-          {address ? 'Proceed' : 'Connect wallet'}
+          Approve
         </Button>
       </div>
     </Row>
