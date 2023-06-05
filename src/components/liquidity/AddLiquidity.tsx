@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { useChainId } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
 import useTokenContractInstance from '@/hooks/useTokenContractInstance';
@@ -21,15 +21,38 @@ type tokenRowProps = {
 } & React.ComponentPropsWithRef<'div'>;
 
 const AddLiquidity = () => {
+  const { address } = useAccount();
   const chainId = useChainId();
+  const [totalsupply, setTotalSupply] = useState('0');
   const [swapDetails, setSwapDetails] = useState({
     token: tokens[chainId][0],
     amount: 0,
+    transfer: {
+      address: '',
+      value: 0,
+    },
+    transferFrom: {
+      to_address: '',
+      from_address: '',
+      value: 0,
+    },
   });
   const tokenContractInstance = useTokenContractInstance({
     tokenAddress: swapDetails.token.address,
   });
 
+  const getTotalSupply = async () => {
+    const supply = await tokenContractInstance?.totalSupply();
+    if (!supply) {
+      return;
+    }
+    setTotalSupply(supply.toString());
+  };
+
+  React.useEffect(() => {
+    getTotalSupply();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Row
       isBetween
@@ -59,7 +82,7 @@ const AddLiquidity = () => {
         </Row>
 
         <p className='mt-4 font-normal text-white text-opacity-40'>
-          Approve amount
+          Approve amount - approve()
         </p>
         <Card className='mt-2'>
           <Input
@@ -86,6 +109,161 @@ const AddLiquidity = () => {
           className='mt-6  h-16  w-full rounded-2xl text-center'
         >
           Approve
+        </Button>
+
+        <p className='mt-4 font-normal text-white text-opacity-40'>
+          Transfer amount - transfer()
+        </p>
+        <Row className='space-x-2'>
+          <Card className='mt-2 w-[70%]'>
+            <Input
+              value={swapDetails.transfer.address}
+              placeholder='Enter address...'
+              type='text'
+              onChange={(e) => {
+                setSwapDetails({
+                  ...swapDetails,
+                  transfer: {
+                    ...swapDetails.transfer,
+                    address: e.target.value,
+                  },
+                });
+              }}
+            />
+          </Card>
+          <Card className='mt-2 w-[30%]'>
+            <Input
+              value={swapDetails.transfer.value}
+              placeholder='Enter amount'
+              onChange={(e) => {
+                setSwapDetails({
+                  ...swapDetails,
+                  transfer: {
+                    ...swapDetails.transfer,
+                    value: Number(e.target.value),
+                  },
+                });
+              }}
+            />
+          </Card>
+        </Row>
+
+        <Button
+          disabled={
+            swapDetails.transfer.value === 0 ||
+            swapDetails.transfer.address === '' ||
+            !address
+          }
+          onClick={async () => {
+            await tokenContractInstance?.transfer(
+              swapDetails.transfer.address,
+              swapDetails.transfer.value *
+                Math.pow(10, swapDetails.token.decimals)
+            );
+          }}
+          className='mt-6  h-16  w-full rounded-2xl text-center'
+        >
+          Transfer
+        </Button>
+        <p className='mt-4 font-normal text-white text-opacity-40'>
+          Transfer amount - transferFrom()
+        </p>
+        <Row className='space-x-2'>
+          <Card className='mt-2 w-[70%]'>
+            <Input
+              value={swapDetails.transferFrom.from_address}
+              placeholder='Enter from address...'
+              type='text'
+              onChange={(e) => {
+                setSwapDetails({
+                  ...swapDetails,
+                  transferFrom: {
+                    ...swapDetails.transferFrom,
+                    from_address: e.target.value,
+                  },
+                });
+              }}
+            />
+          </Card>
+          <Card className='mt-2 w-[30%]'>
+            <Input
+              value={swapDetails.transferFrom.value}
+              placeholder='Amount'
+              onChange={(e) => {
+                setSwapDetails({
+                  ...swapDetails,
+                  transferFrom: {
+                    ...swapDetails.transferFrom,
+                    value: Number(e.target.value),
+                  },
+                });
+              }}
+            />
+          </Card>
+        </Row>
+        <Row className='space-x-2'>
+          <Card className='mt-2 w-[70%]'>
+            <Input
+              value={swapDetails.transferFrom.to_address}
+              placeholder='Enter to address...'
+              type='text'
+              onChange={(e) => {
+                setSwapDetails({
+                  ...swapDetails,
+                  transferFrom: {
+                    ...swapDetails.transferFrom,
+                    to_address: e.target.value,
+                  },
+                });
+              }}
+            />
+          </Card>
+        </Row>
+
+        <Button
+          disabled={
+            swapDetails.transferFrom.to_address === '' ||
+            swapDetails.transferFrom.from_address === '' ||
+            swapDetails.transferFrom.value === 0 ||
+            !address
+          }
+          onClick={async () => {
+            await tokenContractInstance?.transferFrom(
+              swapDetails.transferFrom.from_address,
+              swapDetails.transferFrom.to_address,
+              swapDetails.transferFrom.value *
+                Math.pow(10, swapDetails.token.decimals)
+            );
+          }}
+          className='mt-6  h-16  w-full rounded-2xl text-center'
+        >
+          Transfer from
+        </Button>
+        <p className='mt-4 font-normal text-white text-opacity-40'>
+          Total supply - totalSupply()
+        </p>
+        <Card className='mt-2'>
+          <Input
+            value={totalsupply}
+            type='text'
+            token={swapDetails.token}
+            disabled={true}
+            placeholder='eg: $1000'
+          />
+        </Card>
+        <p className='mt-4 font-normal text-white text-opacity-40'>
+          Allowance amount - allowance()
+        </p>
+        <Button
+          onClick={async () => {
+            await tokenContractInstance?.allowance(
+              '0xf2eFb7F23EC666272A194Ac979a06e9075250354',
+              swapDetails.token.address
+            );
+          }}
+          className='mt-6  h-16  w-full rounded-2xl text-center'
+        >
+          Allowance
         </Button>
       </div>
     </Row>
