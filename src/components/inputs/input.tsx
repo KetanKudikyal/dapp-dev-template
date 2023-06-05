@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import React from 'react';
-import { useAccount } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
 import useGetTokenBalances from '@/hooks/useGetTokenBalances';
@@ -20,11 +19,11 @@ const Input = React.forwardRef<
     <Row
       isBetween
       className={clsx(
-        ' w-full   rounded-2xl px-3 py-3',
+        ' w-full rounded-2xl    px-3 py-3',
         disabled && 'cursor-not-allowed'
       )}
     >
-      <div className='w-fit'>
+      <div className='w-full'>
         <input
           ref={ref}
           value={value === 0 ? '' : value}
@@ -49,11 +48,7 @@ const Input = React.forwardRef<
 export default Input;
 
 const TokenDetails = ({ token }: { token: Token }) => {
-  const { address } = useAccount();
-
   const { data } = useGetTokenBalances({
-    address: address,
-    decimals: token.decimals,
     tokenContractAddress: token.address,
   });
   return (

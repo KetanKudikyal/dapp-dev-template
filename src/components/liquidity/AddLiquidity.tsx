@@ -1,14 +1,15 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { useAccount, useChainId } from 'wagmi';
+import { Address, useAccount, useChainId } from 'wagmi';
 
 import clsxm from '@/lib/clsxm';
+import useGetTokenBalances from '@/hooks/useGetTokenBalances';
 import useTokenContractInstance from '@/hooks/useTokenContractInstance';
 
 import Button from '@/components/buttons/Button';
 import Card from '@/components/cards';
+import CreatePool from '@/components/CreatePool';
 import Input from '@/components/inputs/input';
-import TokenSelect from '@/components/modals';
 import Row from '@/components/rows/Row';
 
 import { Token, tokens } from '@/config/tokens';
@@ -22,8 +23,12 @@ type tokenRowProps = {
 
 const AddLiquidity = () => {
   const { address } = useAccount();
+  const [tokenContractAddress, setTokenContractAddress] = useState<
+    Address | string
+  >('0x04517a727E4d503a9aCE8Ec8B17c08990e2561b9');
   const chainId = useChainId();
   const [totalsupply, setTotalSupply] = useState('0');
+  const [tokenSymbol, setTokenSymbol] = useState('');
   const [swapDetails, setSwapDetails] = useState({
     token: tokens[chainId][0],
     amount: 0,
@@ -38,7 +43,11 @@ const AddLiquidity = () => {
     },
   });
   const tokenContractInstance = useTokenContractInstance({
-    tokenAddress: swapDetails.token.address,
+    tokenAddress: tokenContractAddress as Address,
+  });
+
+  const tokenBalance = useGetTokenBalances({
+    tokenContractAddress: tokenContractAddress as Address,
   });
 
   const getTotalSupply = async () => {
@@ -48,17 +57,34 @@ const AddLiquidity = () => {
     }
     setTotalSupply(supply.toString());
   };
-
+  const getTokenSymbol = async () => {
+    const symbol = await tokenContractInstance?.symbol();
+    if (symbol) {
+      setTokenSymbol(symbol);
+    }
+  };
   React.useEffect(() => {
-    getTotalSupply();
+    if (tokenContractAddress) {
+      getTotalSupply();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [tokenContractAddress, tokenContractInstance]);
+  React.useEffect(() => {
+    if (tokenContractAddress) {
+      getTokenSymbol();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tokenContractAddress, tokenContractInstance]);
+
   return (
     <Row
       isBetween
       isResponsive
-      className='space-y-4 pb-20 md:space-y-0 md:pb-0'
+      className='items-start space-y-4 pb-20 md:space-y-0 md:pb-0'
     >
+      <div className='shadow-bid mx-auto h-full  rounded-2xl border-2 border-white border-opacity-10 bg-white bg-opacity-5 px-6 py-6 backdrop-blur-xl md:w-[48%]'>
+        <CreatePool />
+      </div>
       <div className='shadow-bid mx-auto h-full  rounded-2xl border-2 border-white border-opacity-10 bg-white bg-opacity-5 px-6 py-6 backdrop-blur-xl md:w-[48%]'>
         <p className='font-normal text-white text-opacity-40'>Select a token</p>
         <Row isBetween className='mt-2  w-full space-x-2'>
@@ -68,16 +94,47 @@ const AddLiquidity = () => {
             disabled={true}
             imageurl={swapDetails.tokenA.image}
           /> */}
-          <div className=' h-full w-[100%]'>
-            <TokenSelect
-              selected={swapDetails.token}
-              setSelected={(_token) => {
-                setSwapDetails({
-                  ...swapDetails,
-                  token: _token,
-                });
-              }}
-            />
+          <div className=' h-full w-full'>
+            <Card className='w-full'>
+              <Input
+                value={tokenContractAddress}
+                type='text'
+                placeholder='Enter token address'
+                className='w-full'
+                onChange={(e) => {
+                  setTokenContractAddress(e.target.value);
+                }}
+              />
+            </Card>
+          </div>
+        </Row>
+
+        <Row className='space-x-3'>
+          <div>
+            <p className='mt-4 font-normal text-white text-opacity-40'>
+              Token Symbol
+            </p>
+            <Card className='mt-2'>
+              <Input
+                value={tokenSymbol}
+                type='text'
+                placeholder='Token symbol'
+                disabled={true}
+              />
+            </Card>
+          </div>
+          <div>
+            <p className='mt-4 font-normal text-white text-opacity-40'>
+              Balance
+            </p>
+            <Card className='mt-2'>
+              <Input
+                value={tokenBalance.data?.toString()}
+                type='text'
+                placeholder='Token symbol'
+                disabled={true}
+              />
+            </Card>
           </div>
         </Row>
 
@@ -87,7 +144,6 @@ const AddLiquidity = () => {
         <Card className='mt-2'>
           <Input
             value={swapDetails.amount}
-            token={swapDetails.token}
             placeholder='eg: $1000'
             onChange={(e) => {
               setSwapDetails({
@@ -99,7 +155,7 @@ const AddLiquidity = () => {
         </Card>
 
         <Button
-          disabled={swapDetails.amount === 0}
+          disabled={swapDetails.amount === 0 || tokenContractAddress === ''}
           onClick={async () => {
             await tokenContractInstance?.approve(
               swapDetails.token.address,
@@ -246,7 +302,6 @@ const AddLiquidity = () => {
           <Input
             value={totalsupply}
             type='text'
-            token={swapDetails.token}
             disabled={true}
             placeholder='eg: $1000'
           />

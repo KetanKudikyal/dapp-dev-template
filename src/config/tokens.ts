@@ -29,6 +29,24 @@ export const tokens: Record<number, Token[]> = {
       image:
         'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
     },
+    {
+      id: 'ket-coin',
+      symbol: 'KET',
+      decimals: 18,
+      name: 'KET Coin',
+      address: '0x4d8159C1ACDa64376cbcCc6447db27A9F6066383',
+      image:
+        'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
+    },
+    {
+      id: 'ket-1-coin',
+      symbol: 'KET-1',
+      decimals: 18,
+      name: 'KET-1 Coin',
+      address: '0xe701ea7a59c93d977d55ae399156001c2e3b4ec4',
+      image:
+        'https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png?1547042389',
+    },
   ],
   [goerli.id]: [
     {

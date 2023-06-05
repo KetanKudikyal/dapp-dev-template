@@ -8,6 +8,9 @@ const useTokenContractInstance = ({
   tokenAddress: Address;
 }): ERC20 | null => {
   const { signer } = useGlobalStore();
+  if (tokenAddress.length !== 42) {
+    return null;
+  }
   if (!signer) {
     return null;
   }

@@ -3,3 +3,4 @@
 /* eslint-disable */
 export { ERC20__factory } from './ERC20__factory';
 export { ERC721__factory } from './ERC721__factory';
+export { POOL__factory } from './POOL__factory';
