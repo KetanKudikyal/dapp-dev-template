@@ -15,10 +15,10 @@ const useGetTokenBalances = ({
     [tokenContractAddress + '-user-balance'],
     async () => {
       if (tokenContractAddress.length !== 42) {
-        return 340;
+        return 0;
       }
       if (!address || !signer) {
-        return 240;
+        return 0;
       }
       const token = ERC20__factory.connect(tokenContractAddress, signer);
       const decimal = await token.decimals();
