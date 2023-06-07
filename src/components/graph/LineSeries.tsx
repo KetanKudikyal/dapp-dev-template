@@ -1,202 +1,183 @@
+// import { GetServerSideProps } from "next";
+// import React, { useEffect, useState, useRef } from "react";
+
+// import Highcharts from "highcharts";
+// import HighchartsExporting from "highcharts/modules/exporting";
+// import HighchartsReact from "highcharts-react-official";
+// import dayjs from "dayjs";
+// import { useRouter } from "next/router";
+// import DarkUnica from "highcharts/themes/dark-unica";
+
+// if (typeof Highcharts === "object") {
+//   DarkUnica(Highcharts);
+//   HighchartsExporting(Highcharts);
+// }
+// export interface ChartDataBins {
+//   bins: {
+//     [bin: number]: { native: number; usd: number };
+//   };
+//   binSize: number;
+//   price: number;
+// }
+// type Address = string;
+// type PrefixAddress = string;
+// type Chain = string;
+// type Protocol = string;
+// type Symbol = string;
+
+// export interface Position {
+//   owner: Address;
+//   liqPrice: number;
+//   collateralValue: number;
+//   collateralAmount: number;
+//   chain: Chain;
+//   protocol: Protocol; // protocol adapter id, like "aave-v2", "liquity"...
+//   collateral: PrefixAddress; // token address formatted as "ethereum:0x1234..."
+//   displayName?: string;
+//   url: string;
+// }
+
+// export type PositionSmol = Omit<Position, "collateral" | "owner">;
+// export type ChartData = {
+//   name: string;
+//   symbol: string; // could change to coingeckoId in the future
+//   currentPrice: number;
+//   totalLiquidable: number; // excluding bad debts
+//   totalLiquidables: {
+//     protocols: { [protocol: string]: number };
+//     chains: { [chain: string]: number };
+//   };
+//   badDebts: number;
+//   dangerousPositionsAmount: number; // amount of -20% current price
+//   dangerousPositionsAmounts: {
+//     protocols: { [protocol: string]: number };
+//     chains: { [chain: string]: number };
+//   };
+//   chartDataBins: {
+//     // aggregated by either protocol or chain
+//     protocols: { [protocol: string]: ChartDataBins };
+//     chains: { [chain: string]: ChartDataBins };
+//   };
+//   totalBins: number;
+//   binSize: number;
+//   availability: {
+//     protocols: string[];
+//     chains: string[];
+//   };
+//   time: number;
+//   topPositions: PositionSmol[];
+//   totalPositions: number;
+// };
+// const Liquidation = ({ token }: { token: string }) => {
+//   const [data, setData] = useState<ChartData | []>([]);
+//   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+//   const disabledProtocols: string | any[] = [];
+
+//   const fetchData = async () => {
+//     try {
+//       const request = await fetch(`/api/liquidations?token=${token}`, {
+//         method: "GET",
+//       });
+//       const response = await request.json();
+//       const data = response.data;
+//       const currentPrice = data.currentPrice;
+//       const positions = data.positions.filter(
+//         (p: { protocol: any }) => !disabledProtocols.includes(p.protocol)
+//       );
+//       const validPositions = positions.filter(
+//         (p: { liqPrice: number }) =>
+//           p.liqPrice <= currentPrice && p.liqPrice > currentPrice / 1000000
+//       );
+//       console.log(validPositions);
+
+//       setData(response.data);
+//     } catch (e) {
+//       setData([]);
+//     }
+//   };
+//   useEffect(() => {
+//     fetchData();
+//   }, []);
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       console.log("This will be called every 60 seconds");
+//     }, 60000);
+//     return () => clearInterval(interval);
+//   }, []);
+//   const options = {
+//     title: {
+//       text: "My stock chart",
+//     },
+//     series: [
+//       {
+//         data: [1, 2, 3],
+//       },
+//     ],
+//   };
+//   return (
+//     <HighchartsReact
+//       highcharts={Highcharts}
+//       contructorType="stockChart"
+//       options={options}
+//       ref={chartComponentRef}
+//     />
+//   );
+// };
+
+// export const getServerSideProps: GetServerSideProps<{
+//   token?: string;
+// }> = async ({ params }) => {
+//   return {
+//     props: { token: params?.token as string },
+//   };
+// };
+// export default Liquidation;
+
 import Highcharts from 'highcharts';
-import HighchartsExporting from 'highcharts/modules/exporting';
-import DarkUnica from 'highcharts/themes/dark-unica';
+import HighchartsStock from 'highcharts/modules/stock';
 import HighchartsReact from 'highcharts-react-official';
-import React, { useEffect, useRef, useState } from 'react';
-import { ImSpinner2 } from 'react-icons/im';
+import React from 'react';
+
+// Initialize Highcharts modules
 
 if (typeof Highcharts === 'object') {
-  DarkUnica(Highcharts);
-  HighchartsExporting(Highcharts);
+  HighchartsStock(Highcharts);
 }
-
-export const ONE_HOUR_SECONDS = 3600;
-
-export const TimeWindow: {
-  [key: string]: 'day' | 'week' | 'month';
-} = {
-  DAY: 'day',
-  WEEK: 'week',
-  MONTH: 'month',
-};
-
-const LineSeriesGraph = (
-  props: {
-    address: `0x${string}`;
-    symbol: string;
-  } & HighchartsReact.Props
-) => {
-  const [priceData, setPricedata] = useState<[[number, number]] | []>([]);
-  const [isLoading, setIsloading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-
-  const fetchTokenPrice = async (address: string) => {
-    try {
-      setIsloading(true);
-      const req = await fetch(
-        `https://api.coingecko.com/api/v3/coins/polygon-pos/contract/${address}/market_chart/?vs_currency=usd&days=10`,
-        { mode: 'cors' }
-      );
-      const res = await req.json();
-      setPricedata(res.prices);
-      setIsloading(false);
-    } catch (error) {
-      setIsloading(false);
-      setError('Cannot get data for ' + props.symbol);
-    }
-  };
-
-  useEffect(() => {
-    if (props.address) {
-      fetchTokenPrice(props.address);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.address]);
-
-  if (isLoading || !props.address) {
-    return (
-      <div className='flex h-[200px] w-full items-center justify-center'>
-        <ImSpinner2 className='animate-spin' size={20} />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className='flex h-[200px] w-full items-center justify-center'>
-        Cannot get data for {props.symbol}
-      </div>
-    );
-  }
-  const options: Highcharts.Options = {
-    credits: {
-      enabled: false,
-    },
-    chart: {
-      zooming: {
-        type: 'x',
-      },
-      height: 200,
-      backgroundColor: '#122939',
-      // backgroundColor: '#072338',
-    },
-    exporting: {
-      enabled: false,
+const LineSeriesGraph = () => {
+  const options = {
+    rangeSelector: {
+      selected: 1,
     },
     title: {
-      text: `${props.symbol} Price`,
-      style: {
-        color: '#fff',
-        fontSize: '8px',
-        opacity: 0.5,
-        fontWeight: '400',
-        fontFamily: 'Inter',
-      },
-    },
-    xAxis: {
-      visible: true,
-      title: {
-        style: {
-          color: '#fff',
-          fontSize: '10px',
-          opacity: 0.5,
-          fontWeight: '500',
-          fontFamily: 'Inter',
-        },
-      },
-      lineWidth: 0,
-      lineColor: '#345B74',
-      minorTickLength: 0,
-      tickColor: '#345B74',
-      type: 'datetime',
-      labels: {
-        overflow: 'justify',
-        formatter: function (value) {
-          return new Date(value.pos as number).toLocaleDateString();
-        },
-      },
-    },
-    yAxis: {
-      visible: true,
-      lineWidth: 0,
-      minorTickLength: 0,
-      tickColor: '#345B74',
-
-      gridLineColor: '#345B74',
-      title: {
-        text: '',
-        style: {
-          color: '#fff',
-          fontSize: '10px',
-          fontWeight: '500',
-          opacity: 0.5,
-          fontFamily: 'Inter',
-        },
-      },
-    },
-    legend: {
-      enabled: false,
-    },
-    tooltip: {
-      style: {
-        borderRadius: 30,
-        fontSize: '8px',
-        fontFamily: 'Inter',
-      },
-      borderRadius: 15,
-      backgroundColor: '#0F1B1F',
-      shadow: false,
-
-      formatter: function () {
-        return (
-          this.point.series.name +
-          ': <b>' +
-          Highcharts.numberFormat(this.point.y || 0, 1, ',', '.') +
-          '</b><br/>' +
-          'Date: <b>' +
-          new Date(this.point.x * 1000).toLocaleDateString() +
-          '</b><br/>'
-        );
-      },
-    },
-    plotOptions: {
-      area: {
-        fillColor: {
-          linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
-          stops: [
-            [0, '#0e5eab'],
-            [1, 'rgba(0, 51, 153, 0.10)'],
-          ],
-        },
-        marker: {
-          enabled: false,
-        },
-        lineWidth: 1.5,
-        states: {
-          hover: {
-            lineWidth: 1.5,
-          },
-        },
-        threshold: null,
-      },
+      text: 'Stock Prices',
     },
     series: [
       {
-        type: 'area',
-        color: '#0e5eab',
-        name: 'Price',
-        data: priceData,
+        name: 'Stock Price',
+        data: [
+          // Replace with your own data
+          [1552483200000, 10],
+          [1552569600000, 20],
+          [1552656000000, 30],
+          [1552742400000, 40],
+          [1552828800000, 50],
+        ],
+        tooltip: {
+          valueDecimals: 2,
+        },
       },
     ],
   };
 
   return (
-    <HighchartsReact
-      highcharts={Highcharts.Chart}
-      options={options}
-      ref={chartComponentRef}
-      {...props}
-    />
+    <div>
+      <HighchartsReact
+        highcharts={Highcharts}
+        constructorType='stockChart'
+        options={options}
+      />
+    </div>
   );
 };
+
 export default LineSeriesGraph;
