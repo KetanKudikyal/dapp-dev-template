@@ -9,7 +9,7 @@ interface MedalData {
   bronze: number;
 }
 
-const BarChart: React.FC = () => {
+const ScatterChart: React.FC = () => {
   const [chartData, setChartData] = useState<MedalData[]>([]);
 
   useEffect(() => {
@@ -25,31 +25,66 @@ const BarChart: React.FC = () => {
   }, []);
 
   const options: Options = {
+    credits: {
+      enabled: false,
+    },
+    exporting: {
+      enabled: false,
+    },
+
     chart: {
       type: 'scatter',
+      backgroundColor: '#121619',
+      height: 180,
     },
     title: {
-      text: 'Olympic Medals - 2012',
+      text: '',
     },
     xAxis: {
-      categories: chartData.map((item) => item.name),
+      visible: true,
+      lineWidth: 0,
+      tickColor: '#242A2E',
+      tickWidth: 1,
+      labels: {
+        style: {
+          color: '#242A2E',
+        },
+      },
     },
     yAxis: {
-      title: {
-        text: 'Number of Medals',
+      visible: true,
+      gridLineColor: '#242A2E',
+      tickColor: '#242A2E',
+      tickWidth: 1,
+      labels: {
+        style: {
+          color: '#242A2E',
+        },
       },
+      title: {
+        text: '',
+      },
+    },
+    legend: {
+      enabled: false,
     },
     series: [
       {
         name: 'Gold',
+        color: '#02CD58',
+
         data: chartData.map((item) => item.age),
       },
       {
         name: 'Silver',
+        color: '#02CD58',
+
         data: chartData.map((item) => item.age),
       },
       {
         name: 'Bronze',
+        color: '#02CD58',
+
         data: chartData.map((item) => item.age),
       },
     ],
@@ -66,4 +101,4 @@ const BarChart: React.FC = () => {
   );
 };
 
-export default BarChart;
+export default ScatterChart;

@@ -24,6 +24,7 @@ const Graph = (
   props: {
     address: `0x${string}`;
     symbol: string;
+    showAxis?: boolean;
   } & HighchartsReact.Props
 ) => {
   const [priceData, setPricedata] = useState<[[number, number]] | []>([]);
@@ -35,11 +36,11 @@ const Graph = (
     try {
       setIsloading(true);
       const req = await fetch(
-        `https://api.coingecko.com/api/v3/coins/polygon-pos/contract/${address}/market_chart/?vs_currency=usd&days=10`,
+        `https://api.coingecko.com/api/v3/coins/polygon-pos/contract/${address}/market_chart/?vs_currency=usd&days=24h`,
         { mode: 'cors' }
       );
       const res = await req.json();
-      setPricedata(res.prices);
+      setPricedata(res.prices.slice(0, 20));
       setIsloading(false);
     } catch (error) {
       setIsloading(false);
@@ -56,14 +57,14 @@ const Graph = (
 
   if (isLoading || !props.address) {
     return (
-      <div className='flex h-[200px] w-full items-center justify-center'>
+      <div className='flex h-full w-full items-center justify-center'>
         <ImSpinner2 className='animate-spin' size={20} />
       </div>
     );
   }
   if (error) {
     return (
-      <div className='flex h-[200px] w-full items-center justify-center'>
+      <div className='flex h-[100px] w-full items-center justify-center'>
         Cannot get data for {props.symbol}
       </div>
     );
@@ -76,15 +77,14 @@ const Graph = (
       zooming: {
         type: 'x',
       },
-      height: 200,
-      backgroundColor: '#122939',
+      backgroundColor: '#121619',
       // backgroundColor: '#072338',
     },
     exporting: {
       enabled: false,
     },
     title: {
-      text: `${props.symbol} Price`,
+      text: ``,
       style: {
         color: '#fff',
         fontSize: '8px',
@@ -94,44 +94,51 @@ const Graph = (
       },
     },
     xAxis: {
-      visible: true,
-      title: {
-        style: {
-          color: '#fff',
-          fontSize: '10px',
-          opacity: 0.5,
-          fontWeight: '500',
-          fontFamily: 'Inter',
-        },
-      },
+      visible: props.showAxis,
       lineWidth: 0,
-      lineColor: '#345B74',
-      minorTickLength: 0,
-      tickColor: '#345B74',
-      type: 'datetime',
+      title: {
+        text: '',
+      },
+      // title: {
+      //   style: {
+      //     color: '#fff',
+      //     fontSize: '10px',
+      //     opacity: 0.5,
+      //     fontWeight: '500',
+      //     fontFamily: 'Inter',
+      //   },
+      // },
+      // lineWidth: 0,
+      // lineColor: '#345B74',
+      // minorTickLength: 0,
+      // tickColor: '#345B74',
+      // type: 'datetime',
+      // labels: {
+      //   overflow: 'justify',
+      //   formatter: function (value) {
+      //     return new Date(value.pos as number).toLocaleDateString();
+      //   },
+      // },
+      tickColor: '#242A2E',
+
       labels: {
-        overflow: 'justify',
-        formatter: function (value) {
-          return new Date(value.pos as number).toLocaleDateString();
+        style: {
+          color: '#242A2E',
         },
       },
     },
     yAxis: {
-      visible: true,
-      lineWidth: 0,
-      minorTickLength: 0,
-      tickColor: '#345B74',
-
-      gridLineColor: '#345B74',
+      visible: props.showAxis,
+      gridLineColor: '#242A2E',
+      tickColor: '#242A2E',
+      tickWidth: 1,
+      labels: {
+        style: {
+          color: '#242A2E',
+        },
+      },
       title: {
         text: '',
-        style: {
-          color: '#fff',
-          fontSize: '10px',
-          fontWeight: '500',
-          opacity: 0.5,
-          fontFamily: 'Inter',
-        },
       },
     },
     legend: {
@@ -139,12 +146,11 @@ const Graph = (
     },
     tooltip: {
       style: {
-        borderRadius: 30,
         fontSize: '8px',
         fontFamily: 'Inter',
       },
-      borderRadius: 15,
-      backgroundColor: '#0F1B1F',
+      borderRadius: 5,
+      backgroundColor: '#21252B',
       shadow: false,
 
       formatter: function () {
@@ -160,14 +166,7 @@ const Graph = (
       },
     },
     plotOptions: {
-      area: {
-        fillColor: {
-          linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
-          stops: [
-            [0, '#0e5eab'],
-            [1, 'rgba(0, 51, 153, 0.10)'],
-          ],
-        },
+      line: {
         marker: {
           enabled: false,
         },
@@ -182,8 +181,8 @@ const Graph = (
     },
     series: [
       {
-        type: 'area',
-        color: '#0e5eab',
+        type: 'line',
+        color: '#fff',
         name: 'Price',
         data: priceData,
       },
@@ -193,6 +192,7 @@ const Graph = (
   return (
     <HighchartsReact
       highcharts={Highcharts}
+      containerProps={{ style: { height: '100%', width: '100%' } }}
       options={options}
       ref={chartComponentRef}
       {...props}
