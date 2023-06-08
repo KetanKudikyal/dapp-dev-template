@@ -58,7 +58,11 @@ const BarChart = () => {
         borderWidth: 0,
         borderRadius: 0,
         data: [
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           10, 15, 7, 12, 9, 10, 15, 7, 12, 9, 10, 15, 7, 12, 9, 10, 15, 7, 12,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           9,
         ],
       },
