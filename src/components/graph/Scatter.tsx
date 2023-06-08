@@ -11,7 +11,7 @@ interface MedalData {
   bronze: number;
 }
 
-const ScatterChart: React.FC = () => {
+const ScatterChart = ({ height }: { height: number }) => {
   const [chartData, setChartData] = useState<MedalData[]>([]);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const ScatterChart: React.FC = () => {
     chart: {
       type: 'scatter',
       backgroundColor: '#121619',
-      height: 180,
+      height: height,
     },
     title: {
       text: '',

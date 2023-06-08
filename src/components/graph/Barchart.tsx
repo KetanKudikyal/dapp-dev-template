@@ -2,7 +2,13 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React from 'react';
 
-const BarChart = () => {
+const BarChart = ({
+  height,
+  showAxis,
+}: {
+  height: number;
+  showAxis: boolean;
+}) => {
   const options: Highcharts.Options = {
     credits: {
       enabled: false,
@@ -11,8 +17,8 @@ const BarChart = () => {
       type: 'column', // Set chart type to column for vertical bar chart
       backgroundColor: '#121619',
       marginTop: 0,
-      height: 70,
-      marginBottom: 0,
+      height: height,
+      marginBottom: !showAxis ? 0 : 50,
     },
     exporting: {
       enabled: false,
@@ -21,22 +27,31 @@ const BarChart = () => {
       text: '',
     },
     xAxis: {
-      visible: false,
-      categories: [
-        'Category 1',
-        'Category 2',
-        'Category 3',
-        'Category 4',
-        'Category 5',
-      ],
+      visible: showAxis,
+      lineWidth: 0,
+      tickColor: '#242A2E',
+      tickWidth: 1,
+      labels: {
+        style: {
+          color: '#242A2E',
+        },
+      },
       title: {
-        text: 'Categories',
+        text: '',
       },
     },
     yAxis: {
-      visible: false,
+      visible: showAxis,
+      gridLineColor: '#242A2E',
+      tickColor: '#242A2E',
+      tickWidth: 1,
+      labels: {
+        style: {
+          color: '#242A2E',
+        },
+      },
       title: {
-        text: 'Value',
+        text: '',
       },
     },
     legend: {

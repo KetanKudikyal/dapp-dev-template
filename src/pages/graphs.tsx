@@ -11,7 +11,16 @@ import Row from '@/components/rows/Row';
 import Seo from '@/components/Seo';
 
 const Graphs = () => {
-  const [fullScreenView, setFullScreenView] = useState(false);
+  const [selectedGraph, setSelectedGraph] = useState<{
+    title: string;
+    enabled: boolean;
+    component: JSX.Element | null;
+  }>({
+    title: '',
+    enabled: false,
+    component: null,
+  });
+
   return (
     <Layout>
       <Seo />
@@ -34,19 +43,23 @@ const Graphs = () => {
       </div> */}
       <Row
         className={clsxm(
-          'relative mx-auto mb-10 h-[610px] w-full max-w-[1200px]',
-          fullScreenView ? 'space-x-0' : 'space-x-2'
+          'relative mx-auto mb-10 h-[610px] w-full max-w-[1000px]',
+          selectedGraph.enabled ? 'space-x-0' : 'space-x-2'
         )}
       >
-        {fullScreenView && (
+        {selectedGraph.enabled && (
           <div className='absolute left-0 right-0  top-0 z-20 h-full w-full rounded-lg border border-[#2A3136] bg-[#121619] p-4'>
             <Row isBetween>
               <p className='mb-2 text-[20px]  font-bold text-[#c7c7cc]'>
-                Floor price
+                {selectedGraph.title}
               </p>
               <div
                 onClick={() => {
-                  setFullScreenView(false);
+                  setSelectedGraph({
+                    title: '',
+                    enabled: false,
+                    component: null,
+                  });
                 }}
               >
                 X
@@ -57,11 +70,7 @@ const Graphs = () => {
               className='mt-10 h-[500px]
             '
             >
-              <Graph
-                address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
-                symbol='ETH'
-                showAxis={true}
-              />
+              {selectedGraph.component}
             </div>
           </div>
         )}
@@ -69,7 +78,17 @@ const Graphs = () => {
         <div className='flex  h-full w-[70%] grow flex-col space-y-2 '>
           <div
             onClick={() => {
-              setFullScreenView(true);
+              setSelectedGraph({
+                title: 'Floor price',
+                enabled: true,
+                component: (
+                  <Graph
+                    address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
+                    symbol='ETH'
+                    showAxis={true}
+                  />
+                ),
+              });
             }}
             className='h-[60%] rounded-xl border border-[#2A3136] bg-[#121619] p-4'
           >
@@ -89,13 +108,17 @@ const Graphs = () => {
           </div>
           <div
             onClick={() => {
-              setFullScreenView(true);
+              setSelectedGraph({
+                title: 'Sales',
+                enabled: true,
+                component: <ScatterChart height={500} />,
+              });
             }}
             className='relative mt-4 h-[40%] rounded-xl border border-[#2A3136] bg-[#121619] p-4'
           >
             <p className='mb-2 text-[18px] font-bold text-[#c7c7cc]'>Sales</p>
             <div className='h-[100px] '>
-              <ScatterChart />
+              <ScatterChart height={180} />
             </div>
           </div>
         </div>
@@ -119,7 +142,17 @@ const Graphs = () => {
           </div>
           <div
             onClick={() => {
-              setFullScreenView(true);
+              setSelectedGraph({
+                title: 'Unique owners',
+                enabled: true,
+                component: (
+                  <Graph
+                    address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
+                    symbol='USD'
+                    showAxis={true}
+                  />
+                ),
+              });
             }}
             className='h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
           >
@@ -129,7 +162,7 @@ const Graphs = () => {
             <div className='text-[12px]'>
               5,637 <span className='text-[#c7c7cc]'>(56.37% unique)</span>
             </div>
-            <div className='h-[90px] overflow-hidden'>
+            <div className='h-[70px] overflow-hidden'>
               <Graph
                 address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
                 symbol='USD'
@@ -138,16 +171,36 @@ const Graphs = () => {
           </div>
           <div
             onClick={() => {
-              setFullScreenView(true);
+              setSelectedGraph({
+                title: 'Sentiment',
+                enabled: true,
+                component: (
+                  <StackedBarChart
+                    height={500}
+                    showAxis={true}
+                    pointWidth={190}
+                  />
+                ),
+              });
             }}
             className='h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
           >
             <p className='text-[14px] font-normal text-[#c7c7cc]'>Sentiment</p>
-            <StackedBarChart />
+            <StackedBarChart height={80} pointWidth={70} showAxis={false} />
           </div>
           <div
             onClick={() => {
-              setFullScreenView(true);
+              setSelectedGraph({
+                title: ' Listed tokens',
+                enabled: true,
+                component: (
+                  <Graph
+                    address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
+                    symbol='USD'
+                    showAxis={true}
+                  />
+                ),
+              });
             }}
             className='h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
           >
@@ -158,7 +211,7 @@ const Graphs = () => {
               338
               <span className='text-[#c7c7cc]'>/10,000 (3.38%)</span>
             </div>
-            <div className='h-[90px] overflow-hidden'>
+            <div className='h-[70px] overflow-hidden'>
               <Graph
                 address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
                 symbol='USD'
@@ -167,14 +220,18 @@ const Graphs = () => {
           </div>
           <div
             onClick={() => {
-              setFullScreenView(true);
+              setSelectedGraph({
+                title: 'Listing Depth',
+                enabled: true,
+                component: <BarChart height={500} showAxis={true} />,
+              });
             }}
             className='h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
           >
-            <p className='text-[14px] font-normal text-[#c7c7cc]'>
+            <p className='mb-2 text-[14px] font-normal text-[#c7c7cc]'>
               Listing Depth
             </p>
-            <BarChart />
+            <BarChart height={70} showAxis={false} />
           </div>
         </div>
       </Row>

@@ -4,7 +4,15 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React from 'react';
 
-const StackedBarChart: React.FC = () => {
+const StackedBarChart = ({
+  height,
+  showAxis,
+  pointWidth,
+}: {
+  height: number;
+  pointWidth: number;
+  showAxis: boolean;
+}) => {
   // Sample data for the chart
   const data = [
     {
@@ -37,29 +45,43 @@ const StackedBarChart: React.FC = () => {
     chart: {
       type: 'column',
       backgroundColor: '#121619',
-      marginBottom: 0,
-      height: 70,
+      marginBottom: !showAxis ? 0 : 50,
+
+      height: height,
     },
     title: {
       text: '',
     },
 
     xAxis: {
-      visible: false,
-      categories: ['Category 1', 'Category 2', 'Category 3'],
+      visible: showAxis,
+      lineWidth: 0,
+      tickColor: '#242A2E',
+      tickWidth: 1,
       labels: {
-        rotation: -90,
+        style: {
+          color: '#242A2E',
+        },
+      },
+      title: {
+        text: '',
       },
     },
     exporting: {
       enabled: false,
     },
     yAxis: {
-      visible: false,
-
-      min: 0,
+      visible: showAxis,
+      gridLineColor: '#242A2E',
+      tickColor: '#242A2E',
+      tickWidth: 1,
+      labels: {
+        style: {
+          color: '#242A2E',
+        },
+      },
       title: {
-        text: 'Total',
+        text: '',
       },
     },
     legend: {
@@ -69,7 +91,7 @@ const StackedBarChart: React.FC = () => {
       column: {
         borderRadius: 0,
         stacking: 'normal',
-        pointWidth: 70, // Adjust the width of the columns here
+        pointWidth: pointWidth, // Adjust the width of the columns here
       },
     },
     series: data,
