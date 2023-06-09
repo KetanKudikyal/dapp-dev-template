@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ComponentPropsWithRef, useState } from 'react';
 
 import clsxm from '@/lib/clsxm';
 
@@ -24,23 +24,6 @@ const Graphs = () => {
   return (
     <Layout>
       <Seo />
-      {/* <div className='mx-auto flex w-full flex-col  items-center justify-between space-x-2 space-y-8'>
-        <div className='w-[100%] '>
-          <Graph
-            address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
-            symbol='USD'
-          />
-        </div>
-        <div className='w-[100%] '>
-          <LineSeriesGraph />
-        </div>
-        <div className='w-[100%] '>
-          <BarChart />
-        </div>
-        <div className='w-[100%] '>
-          <ScatterChart />
-        </div>
-      </div> */}
       <Row
         className={clsxm(
           'relative mx-auto mb-10 h-[610px] w-full max-w-[1000px]',
@@ -48,12 +31,12 @@ const Graphs = () => {
         )}
       >
         {selectedGraph.enabled && (
-          <div className='absolute left-0 right-0  top-0 z-20 h-full w-full rounded-lg border border-[#2A3136] bg-[#121619] p-4'>
-            <Row isBetween>
-              <p className='mb-2 text-[20px]  font-bold text-[#c7c7cc]'>
-                {selectedGraph.title}
-              </p>
+          <Card
+            title={selectedGraph.title}
+            className='absolute left-0 right-0  top-0 z-20 h-full w-full '
+            rightIcon={() => (
               <div
+                className='absolute right-6 top-6 cursor-pointer'
                 onClick={() => {
                   setSelectedGraph({
                     title: '',
@@ -64,19 +47,14 @@ const Graphs = () => {
               >
                 X
               </div>
-            </Row>
-
-            <div
-              className='mt-10 h-[500px]
-            '
-            >
-              {selectedGraph.component}
-            </div>
-          </div>
+            )}
+          >
+            <div className='mt-10 h-[500px]'>{selectedGraph.component}</div>
+          </Card>
         )}
 
-        <div className='flex  h-full w-[70%] grow flex-col space-y-2 '>
-          <div
+        <Row direction='col' className='h-full w-[70%] grow space-y-2 '>
+          <Card
             onClick={() => {
               setSelectedGraph({
                 title: 'Floor price',
@@ -90,40 +68,19 @@ const Graphs = () => {
                 ),
               });
             }}
-            className='h-[60%] rounded-xl border border-[#2A3136] bg-[#121619] p-4'
+            rightIcon={() => <ExpandIcon className='absolute right-4 top-4 ' />}
+            title='Floor price'
+            className='h-[60%] '
           >
-            <div className='flex items-center justify-between'>
-              <p className='mb-2 text-[18px]  font-bold text-[#c7c7cc]'>
-                Floor price
-              </p>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='-mt-1 h-5 w-5'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15'
-                />
-              </svg>
-            </div>
-
-            <div
-              className='h-[300px]
-            '
-            >
+            <div className='h-[300px]'>
               <Graph
                 address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
                 symbol='ETH'
                 showAxis={true}
               />
             </div>
-          </div>
-          <div
+          </Card>
+          <Card
             onClick={() => {
               setSelectedGraph({
                 title: 'Sales',
@@ -131,49 +88,17 @@ const Graphs = () => {
                 component: <ScatterChart height={500} />,
               });
             }}
-            className='relative mt-4 h-[40%] rounded-xl border border-[#2A3136] bg-[#121619] p-4'
+            rightIcon={() => <ExpandIcon className='absolute right-4 top-4 ' />}
+            title='Sales'
+            className='relative mt-4 h-[40%]'
           >
-            <Row isBetween>
-              <p className='mb-2 text-[18px] font-bold text-[#c7c7cc]'>Sales</p>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='-mt-1 h-5 w-5'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15'
-                />
-              </svg>
-            </Row>
             <div className='h-[100px] '>
               <ScatterChart height={180} />
             </div>
-          </div>
-        </div>
-        <div className=' flex  h-full w-[30%] flex-col space-y-2 '>
-          <div className='flex items-center   rounded-lg border border-[#2A3136] bg-[#121619] '>
-            <div className='border-r-1 w-fit border border-y-0 border-l-0 border-[#2A3136] px-[18px] py-1.5 text-[14px] font-bold text-white text-opacity-40'>
-              12h
-            </div>
-            <div className='border-r-1 w-fit border border-y-0 border-l-0 border-[#2A3136] px-[18px] py-1.5 text-[14px] font-bold text-white text-opacity-40'>
-              24h
-            </div>
-            <div className='border-r-1 w-fit border border-y-0 border-l-0 border-[#2A3136] px-[18px] py-1.5 text-[14px] font-bold text-white text-opacity-40'>
-              3d
-            </div>
-            <div className='border-r-1 w-fit border border-y-0 border-l-0 border-[#2A3136] px-[18px] py-1.5 text-[14px] font-bold text-white text-opacity-40'>
-              7d
-            </div>
-            <div className='w-fit border border-y-0 border-l-0 border-r-0 border-[#2A3136] px-[18px] py-1.5 text-[14px] font-bold text-white text-opacity-40'>
-              30d
-            </div>
-          </div>
-          <div
+          </Card>
+        </Row>
+        <Row direction='col' className='   h-full w-[30%] space-y-2 '>
+          <Card
             onClick={() => {
               setSelectedGraph({
                 title: 'Unique owners',
@@ -187,41 +112,19 @@ const Graphs = () => {
                 ),
               });
             }}
-            className='h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
+            rightIcon={() => <ExpandIcon className='absolute right-4 top-4 ' />}
+            title='Unique owners'
+            size='sm'
+            className='h-[25%] w-full '
           >
-            <Row isBetween>
-              <div>
-                <div className='text-[14px] font-normal text-[#c7c7cc]'>
-                  Unique owners
-                </div>
-                <div className='text-[12px]'>
-                  5,637 <span className='text-[#c7c7cc]'>(56.37% unique)</span>
-                </div>
-              </div>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='-mt-2 mr-2 h-5 w-5'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15'
-                />
-              </svg>
-            </Row>
-
-            <div className='h-[70px] overflow-hidden'>
+            <div className='h-[90px] w-full overflow-hidden'>
               <Graph
                 address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
                 symbol='USD'
               />
             </div>
-          </div>
-          <div
+          </Card>
+          <Card
             onClick={() => {
               setSelectedGraph({
                 title: 'Sentiment',
@@ -235,32 +138,16 @@ const Graphs = () => {
                 ),
               });
             }}
-            className='relative h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
+            title='Sentiment'
+            size='sm'
+            rightIcon={() => <ExpandIcon className='absolute right-4 top-4 ' />}
+            className='relative h-[25%] w-full'
           >
-            <Row isBetween isCentered>
-              <div>
-                <div className='text-[14px] font-normal text-[#c7c7cc]'>
-                  Sentiment
-                </div>
-              </div>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='mr-2 mt-1 h-5 w-5'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15'
-                />
-              </svg>
-            </Row>
-            <StackedBarChart height={80} pointWidth={70} showAxis={false} />
-          </div>
-          <div
+            <div className='h-[90px] w-full overflow-hidden'>
+              <StackedBarChart height={80} pointWidth={70} showAxis={false} />
+            </div>
+          </Card>
+          <Card
             onClick={() => {
               setSelectedGraph({
                 title: ' Listed tokens',
@@ -274,41 +161,19 @@ const Graphs = () => {
                 ),
               });
             }}
-            className='h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
+            title='Listed tokens'
+            size='sm'
+            rightIcon={() => <ExpandIcon className='absolute right-4 top-4 ' />}
+            className='relative h-[25%] w-full'
           >
-            <Row isBetween>
-              <div>
-                <div className='text-[14px] font-normal text-[#c7c7cc]'>
-                  Listed tokens
-                </div>
-                <div className='text-[12px]'>
-                  338
-                  <span className='text-[#c7c7cc]'>/10,000 (3.38%)</span>
-                </div>
-              </div>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='-mt-2 mr-2 h-5 w-5'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15'
-                />
-              </svg>
-            </Row>
-            <div className='h-[70px] overflow-hidden'>
+            <div className='h-[90px] overflow-hidden'>
               <Graph
                 address='0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174'
                 symbol='USD'
               />
             </div>
-          </div>
-          <div
+          </Card>
+          <Card
             onClick={() => {
               setSelectedGraph({
                 title: 'Listing Depth',
@@ -316,35 +181,77 @@ const Graphs = () => {
                 component: <BarChart height={500} showAxis={true} />,
               });
             }}
-            className='relative h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
+            title='Listing Depth'
+            size='sm'
+            rightIcon={() => <ExpandIcon className='absolute right-4 top-4 ' />}
+            className='relative h-[25%] w-full'
           >
-            <Row isBetween isCentered className='mb-3'>
-              <div>
-                <div className='text-[14px] font-normal text-[#c7c7cc]'>
-                  Listing Depth
-                </div>
-              </div>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='mr-2 mt-1 h-5 w-5'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15'
-                />
-              </svg>
-            </Row>
-            <BarChart height={70} showAxis={false} />
-          </div>
-        </div>
+            <div className='h-[90px] overflow-hidden'>
+              <BarChart height={80} showAxis={false} />
+            </div>
+          </Card>
+        </Row>
       </Row>
     </Layout>
   );
 };
 
 export default Graphs;
+
+const Card: React.FC<
+  ComponentPropsWithRef<'div'> & {
+    size?: 'sm' | 'md';
+    title?: string | JSX.Element;
+    rightIcon?: () => React.JSX.Element;
+  }
+> = ({ className, rightIcon, size = 'md', title, children, ...rest }) => {
+  return (
+    <div
+      className={clsxm(
+        'relative rounded-xl border border-[#2A3136] bg-[#121619]',
+        [size === 'sm' && 'p-2'],
+        [size === 'md' && 'p-4'],
+        className
+      )}
+      {...rest}
+    >
+      {title && (
+        <p
+          className={clsxm('mb-2    text-[#c7c7cc]', [
+            size === 'md' && 'text-[18px] font-bold',
+            size === 'sm' && 'text-[14px] font-normal',
+          ])}
+        >
+          {title}
+        </p>
+      )}
+
+      {children}
+      {rightIcon && rightIcon()}
+    </div>
+  );
+};
+
+const ExpandIcon: React.FC<ComponentPropsWithRef<'svg'>> = ({
+  className,
+  ...rest
+}) => {
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      fill='none'
+      viewBox='0 0 24 24'
+      role='button'
+      strokeWidth={1.5}
+      stroke='currentColor'
+      className={clsxm('h-5  w-5', className)}
+      {...rest}
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        d='M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15'
+      />
+    </svg>
+  );
+};

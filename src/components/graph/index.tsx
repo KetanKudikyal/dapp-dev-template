@@ -1,14 +1,7 @@
 import Highcharts from 'highcharts';
-import HighchartsExporting from 'highcharts/modules/exporting';
-import DarkUnica from 'highcharts/themes/dark-unica';
 import HighchartsReact from 'highcharts-react-official';
 import React, { useEffect, useRef, useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
-
-if (typeof Highcharts === 'object') {
-  DarkUnica(Highcharts);
-  HighchartsExporting(Highcharts);
-}
 
 export const ONE_HOUR_SECONDS = 3600;
 
