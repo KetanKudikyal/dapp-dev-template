@@ -235,7 +235,7 @@ const Graphs = () => {
                 ),
               });
             }}
-            className='h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
+            className='relative h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
           >
             <Row isBetween isCentered>
               <div>
@@ -316,7 +316,7 @@ const Graphs = () => {
                 component: <BarChart height={500} showAxis={true} />,
               });
             }}
-            className='h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
+            className='relative h-[25%] w-full rounded-xl border border-[#2A3136] bg-[#121619] p-2'
           >
             <Row isBetween isCentered className='mb-3'>
               <div>

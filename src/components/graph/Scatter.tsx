@@ -3,6 +3,9 @@
 import Highcharts, { Options } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { useEffect, useState } from 'react';
+import { ImSpinner2 } from 'react-icons/im';
+
+import clsxm from '@/lib/clsxm';
 
 interface MedalData {
   name: string;
@@ -13,14 +16,17 @@ interface MedalData {
 
 const ScatterChart = ({ height }: { height: number }) => {
   const [chartData, setChartData] = useState<MedalData[]>([]);
+  const [isLoading, setIsloading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsloading(true);
       const response = await fetch(
-        'https://cdn.jsdelivr.net/gh/highcharts/highcharts@24912efc85/samples/data/olympic2012.json'
+        'https://api.dune.com/api/v1/query/2506251/results?api_key=axUib0wYIt3S3tvQWzO5MOFUNo1FlOAL'
       );
       const data: MedalData[] = await response.json();
-      setChartData(data.slice(0, 200));
+      setChartData(data.result.rows);
+      setIsloading(false);
     };
 
     fetchData();
@@ -72,32 +78,28 @@ const ScatterChart = ({ height }: { height: number }) => {
     },
     series: [
       {
-        name: 'Gold',
+        name: '',
         color: '#02CD58',
-        data: chartData.map((item) => item.age),
-      },
-      {
-        name: 'Silver',
-        color: '#02CD58',
-
-        data: chartData.map((item) => item.age),
-      },
-      {
-        name: 'Bronze',
-        color: '#02CD58',
-
-        data: chartData.map((item) => item.age),
+        data: chartData.map((item) => item.amount),
       },
     ],
   };
 
+  if (isLoading) {
+    return (
+      <div
+        className={clsxm(
+          'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'
+        )}
+      >
+        <ImSpinner2 className='animate-spin' size={20} />
+      </div>
+    );
+  }
+
   return (
     <div>
-      {chartData.length > 0 ? (
-        <HighchartsReact highcharts={Highcharts} options={options} />
-      ) : (
-        <div>Loading...</div>
-      )}
+      <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
 };
