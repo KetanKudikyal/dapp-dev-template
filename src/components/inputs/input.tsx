@@ -1,7 +1,5 @@
-import { Network } from 'alchemy-sdk';
+import clsx from 'clsx';
 import React from 'react';
-import { useAccount, useNetwork } from 'wagmi';
-import { polygonMumbai } from 'wagmi/chains';
 
 import clsxm from '@/lib/clsxm';
 import useGetTokenBalances from '@/hooks/useGetTokenBalances';
@@ -14,49 +12,56 @@ import { Token } from '@/config/tokens';
 const Input = React.forwardRef<
   HTMLInputElement,
   React.ComponentProps<'input'> & {
-    token: Token;
+    token?: Token;
   }
->(({ token, value, className, placeholder, ...inputprops }, ref) => {
-  const { address } = useAccount();
-  const { chain } = useNetwork();
-  const { data } = useGetTokenBalances({
-    address: address,
-    network:
-      chain?.id === polygonMumbai.id
-        ? Network.MATIC_MUMBAI
-        : Network.ETH_GOERLI,
-    decimals: token.decimals,
-    tokenContractAddress: token.address,
-  });
+>(({ token, disabled, value, className, placeholder, ...inputprops }, ref) => {
   return (
-    <Row isBetween className=' mb-4 mt-2  w-full rounded-2xl  px-3 py-3'>
-      <div className='w-fit'>
+    <Row
+      isBetween
+      className={clsx(
+        ' w-full rounded-2xl    px-3 py-3',
+        disabled && 'cursor-not-allowed'
+      )}
+    >
+      <div className='w-full'>
         <input
           ref={ref}
           value={value === 0 ? '' : value}
+          disabled={disabled}
           type='number'
           className={clsxm(
-            'h-10 w-full rounded-xl border border-none border-white bg-transparent px-2 py-2 text-3xl placeholder:text-white  placeholder:text-opacity-10 focus:outline-none focus:ring-0',
+            'h-10 w-full rounded-xl border border-none border-white bg-transparent px-2 py-2 text-3xl placeholder:text-white placeholder:text-opacity-10  focus:outline-none focus:ring-0 disabled:cursor-not-allowed',
             className
           )}
           placeholder={placeholder || '0'}
           {...inputprops}
         />
-        <p className='ml-2 mt-2 text-sm text-white text-opacity-40'>-</p>
+        {token && (
+          <p className='ml-2 mt-2 text-sm text-white text-opacity-40'>-</p>
+        )}
       </div>
-      <div className='w-fit'>
-        <TokenRow
-          size='sm'
-          tokenName={token.symbol}
-          className='border border-white border-opacity-10 bg-white bg-opacity-5  '
-          imageurl={token.image}
-        />
-        <p className='mt-2 text-sm text-white text-opacity-40'>
-          Balance - {data?.toString()}
-        </p>
-      </div>
+      {token && <TokenDetails token={token} />}
     </Row>
   );
 });
 
 export default Input;
+
+const TokenDetails = ({ token }: { token: Token }) => {
+  const { data } = useGetTokenBalances({
+    tokenContractAddress: token.address,
+  });
+  return (
+    <div className='w-fit'>
+      <TokenRow
+        size='sm'
+        tokenName={token.symbol}
+        className='border border-white border-opacity-10 bg-white bg-opacity-5  '
+        imageurl={token.image}
+      />
+      <p className='mt-2 text-sm text-white text-opacity-40'>
+        Balance - {data?.toString()}
+      </p>
+    </div>
+  );
+};

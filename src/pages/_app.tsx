@@ -18,6 +18,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import '@rainbow-me/rainbowkit/styles.css';
 import '../styles/globals.css';
 
+import InitiateProvider from '@/components/InitiateProvider';
 import Seo from '@/components/Seo';
 
 const { chains, provider, webSocketProvider } = configureChains(
@@ -73,6 +74,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           chains={chains}
         >
           <Seo />
+          <InitiateProvider />
           <Component {...pageProps} />
         </RainbowKitProvider>
       </WagmiConfig>

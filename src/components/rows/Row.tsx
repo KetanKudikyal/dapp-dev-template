@@ -23,7 +23,7 @@ const Row: React.FC<
     <div
       ref={ref}
       className={clsxm(
-        'flex h-fit w-full items-center items-center',
+        'flex h-fit w-full  ',
         [
           isCentered && 'justify-center',
           direction === 'col' ? 'flex-col' : 'flex-row',
