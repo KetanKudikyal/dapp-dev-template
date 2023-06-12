@@ -1,5 +1,7 @@
 import Highcharts from 'highcharts';
 
+const FONT_COLOR = '#515151';
+const BACKGROUND_COLOR = '#121619';
 const HIGHCHARTS_CONFIG: Highcharts.Options = {
   credits: {
     enabled: false,
@@ -8,7 +10,7 @@ const HIGHCHARTS_CONFIG: Highcharts.Options = {
     zooming: {
       type: 'x',
     },
-    backgroundColor: '#121619',
+    backgroundColor: BACKGROUND_COLOR,
   },
   title: {
     text: ``,
@@ -22,21 +24,21 @@ const HIGHCHARTS_CONFIG: Highcharts.Options = {
     title: {
       text: '',
     },
-    tickColor: '#242A2E',
+    tickColor: FONT_COLOR,
     labels: {
       style: {
-        color: '#242A2E',
+        color: FONT_COLOR,
       },
     },
   },
   yAxis: {
     visible: true,
-    gridLineColor: '#242A2E',
-    tickColor: '#242A2E',
+    gridLineColor: FONT_COLOR,
+    tickColor: FONT_COLOR,
     tickWidth: 1,
     labels: {
       style: {
-        color: '#242A2E',
+        color: FONT_COLOR,
       },
     },
     title: {
