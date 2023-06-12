@@ -1,11 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
 import Highcharts, { Options } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { useEffect, useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 
 import clsxm from '@/lib/clsxm';
+
+import HIGHCHARTS_CONFIG from '@/config/highcharts';
 
 interface MedalData {
   name: string;
@@ -33,51 +33,15 @@ const ScatterChart = ({ height }: { height: number }) => {
   }, []);
 
   const options: Options = {
-    credits: {
-      enabled: false,
-    },
-    exporting: {
-      enabled: false,
-    },
-
+    ...HIGHCHARTS_CONFIG,
     chart: {
+      ...HIGHCHARTS_CONFIG.chart,
       type: 'scatter',
-      backgroundColor: '#121619',
       height: height,
-    },
-    title: {
-      text: '',
-    },
-    xAxis: {
-      visible: true,
-      lineWidth: 0,
-      tickColor: '#242A2E',
-      tickWidth: 1,
-      labels: {
-        style: {
-          color: '#242A2E',
-        },
-      },
-    },
-    yAxis: {
-      visible: true,
-      gridLineColor: '#242A2E',
-      tickColor: '#242A2E',
-      tickWidth: 1,
-      labels: {
-        style: {
-          color: '#242A2E',
-        },
-      },
-      title: {
-        text: '',
-      },
-    },
-    legend: {
-      enabled: false,
     },
     series: [
       {
+        type: 'scatter',
         name: '',
         color: '#02CD58',
         data: chartData.map((item) => item.amount),

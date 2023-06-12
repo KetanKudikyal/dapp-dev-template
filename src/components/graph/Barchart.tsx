@@ -7,6 +7,8 @@ import { ImSpinner2 } from 'react-icons/im';
 
 import clsxm from '@/lib/clsxm';
 
+import HIGHCHARTS_CONFIG from '@/config/highcharts';
+
 const BarChart = ({
   height,
   showAxis,
@@ -62,58 +64,23 @@ const BarChart = ({
   }
 
   const options: Highcharts.Options = {
-    credits: {
-      enabled: false,
-    },
+    ...HIGHCHARTS_CONFIG,
     chart: {
-      type: 'column', // Set chart type to column for vertical bar chart
-      backgroundColor: '#121619',
-      marginTop: 0,
+      ...HIGHCHARTS_CONFIG.chart,
+      type: 'column',
       height: height,
-      marginBottom: !showAxis ? 0 : 50,
-    },
-    exporting: {
-      enabled: false,
-    },
-    title: {
-      text: '',
+      marginBottom: !showAxis ? 10 : 50,
     },
     xAxis: {
+      ...HIGHCHARTS_CONFIG.xAxis,
       visible: showAxis,
-      lineWidth: 0,
-      tickColor: '#242A2E',
-      tickWidth: 1,
-      labels: {
-        style: {
-          color: '#242A2E',
-        },
-      },
-      title: {
-        text: '',
-      },
     },
     yAxis: {
+      ...HIGHCHARTS_CONFIG.yAxis,
       visible: showAxis,
-      gridLineColor: '#242A2E',
-      tickColor: '#242A2E',
-      tickWidth: 1,
-      labels: {
-        style: {
-          color: '#242A2E',
-        },
-      },
-      title: {
-        text: '',
-      },
-    },
-    legend: {
-      enabled: false,
     },
     plotOptions: {
-      column: {
-        pointPadding: 0.1,
-        borderWidth: 0,
-      },
+      column: HIGHCHARTS_CONFIG.plotOptions?.column,
     },
     series: [
       {
@@ -124,14 +91,6 @@ const BarChart = ({
         },
         borderWidth: 0,
         borderRadius: 0,
-        // data: [
-        //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //   // @ts-ignore
-        //   10, 15, 7, 12, 9, 10, 15, 7, 12, 9, 10, 15, 7, 12, 9, 10, 15, 7, 12,
-        //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //   // @ts-ignore
-        //   9,
-        // ],
         data: _data,
       },
     ],

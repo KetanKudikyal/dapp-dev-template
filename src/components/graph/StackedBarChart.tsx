@@ -1,11 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-nocheck
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import React, { useEffect, useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 
 import clsxm from '@/lib/clsxm';
+
+import HIGHCHARTS_CONFIG from '@/config/highcharts';
 
 const StackedBarChart = ({
   height,
@@ -109,56 +109,24 @@ const StackedBarChart = ({
 
   // Highcharts configuration options
   const options: Highcharts.Options = {
-    credits: {
-      enabled: false,
-    },
+    ...HIGHCHARTS_CONFIG,
     chart: {
+      ...HIGHCHARTS_CONFIG.chart,
       type: 'column',
-      backgroundColor: '#121619',
       marginBottom: !showAxis ? 0 : 50,
       height: height,
     },
-    title: {
-      text: '',
-    },
-
     xAxis: {
+      ...HIGHCHARTS_CONFIG.xAxis,
       visible: showAxis,
-      lineWidth: 0,
-      tickColor: '#242A2E',
-      tickWidth: 1,
-      labels: {
-        style: {
-          color: '#242A2E',
-        },
-      },
-      title: {
-        text: '',
-      },
-    },
-    exporting: {
-      enabled: false,
     },
     yAxis: {
+      ...HIGHCHARTS_CONFIG.yAxis,
       visible: showAxis,
-      gridLineColor: '#242A2E',
-      tickColor: '#242A2E',
-      tickWidth: 1,
-      labels: {
-        style: {
-          color: '#242A2E',
-        },
-      },
-      title: {
-        text: '',
-      },
-    },
-    legend: {
-      enabled: false,
     },
     plotOptions: {
       column: {
-        borderRadius: 0,
+        ...HIGHCHARTS_CONFIG.plotOptions?.column,
         stacking: 'normal',
         pointWidth: pointWidth, // Adjust the width of the columns here
       },

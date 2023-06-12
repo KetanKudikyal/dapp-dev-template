@@ -1,14 +1,14 @@
 import React from 'react';
 
+import GraphMoodBoard from '@/components/GraphMoodBoard';
 import Layout from '@/components/layout/Layout';
-import AddLiquidity from '@/components/liquidity/AddLiquidity';
 import Seo from '@/components/Seo';
 
 const Home = () => {
   return (
     <Layout>
       <Seo />
-      <AddLiquidity />
+      <GraphMoodBoard />
     </Layout>
   );
 };

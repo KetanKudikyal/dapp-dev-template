@@ -3,6 +3,8 @@ import HighchartsReact from 'highcharts-react-official';
 import React, { useEffect, useRef, useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 
+import HIGHCHARTS_CONFIG from '@/config/highcharts';
+
 export const ONE_HOUR_SECONDS = 3600;
 
 export const TimeWindow: {
@@ -63,89 +65,17 @@ const Graph = (
     );
   }
   const options: Highcharts.Options = {
-    credits: {
-      enabled: false,
-    },
-    chart: {
-      zooming: {
-        type: 'x',
-      },
-      backgroundColor: '#121619',
-      // backgroundColor: '#072338',
-    },
-    exporting: {
-      enabled: false,
-    },
-    title: {
-      text: ``,
-      style: {
-        color: '#fff',
-        fontSize: '8px',
-        opacity: 0.5,
-        fontWeight: '400',
-        fontFamily: 'Inter',
-      },
-    },
+    ...HIGHCHARTS_CONFIG,
     xAxis: {
+      ...HIGHCHARTS_CONFIG.xAxis,
       visible: props.showAxis,
-      lineWidth: 0,
-      title: {
-        text: '',
-      },
-      // title: {
-      //   style: {
-      //     color: '#fff',
-      //     fontSize: '10px',
-      //     opacity: 0.5,
-      //     fontWeight: '500',
-      //     fontFamily: 'Inter',
-      //   },
-      // },
-      // lineWidth: 0,
-      // lineColor: '#345B74',
-      // minorTickLength: 0,
-      // tickColor: '#345B74',
-      // type: 'datetime',
-      // labels: {
-      //   overflow: 'justify',
-      //   formatter: function (value) {
-      //     return new Date(value.pos as number).toLocaleDateString();
-      //   },
-      // },
-      tickColor: '#242A2E',
-
-      labels: {
-        style: {
-          color: '#242A2E',
-        },
-      },
     },
     yAxis: {
+      ...HIGHCHARTS_CONFIG.yAxis,
       visible: props.showAxis,
-      gridLineColor: '#242A2E',
-      tickColor: '#242A2E',
-      tickWidth: 1,
-      labels: {
-        style: {
-          color: '#242A2E',
-        },
-      },
-      title: {
-        text: '',
-      },
-    },
-    legend: {
-      enabled: false,
     },
     tooltip: {
-      style: {
-        fontSize: '8px',
-        fontFamily: 'Inter',
-      },
-      borderRadius: 5,
-      backgroundColor: '#21252B',
-      shadow: false,
-
+      ...HIGHCHARTS_CONFIG.tooltip,
       formatter: function () {
         return (
           this.point.series.name +
@@ -158,25 +88,13 @@ const Graph = (
         );
       },
     },
-    plotOptions: {
-      line: {
-        marker: {
-          enabled: false,
-        },
-        lineWidth: 1.5,
-        states: {
-          hover: {
-            lineWidth: 1.5,
-          },
-        },
-        threshold: null,
-      },
-    },
+    plotOptions: { line: HIGHCHARTS_CONFIG.plotOptions?.line },
     series: [
       {
         type: 'line',
         color: '#fff',
         name: 'Price',
+        animation: false,
         data: priceData,
       },
     ],
